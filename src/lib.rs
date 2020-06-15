@@ -1669,6 +1669,16 @@ mod tests {
         test!(4, doc, "abc");
     }
 
+    #[test]
+    fn unicode_length() {
+        let doc: BoxDoc<()> = BoxDoc::text("test")
+            .append(BoxDoc::line_())
+            .append(BoxDoc::text("漢字ひらがな"))
+            .group();
+        test!(16, doc, "test漢字ひらがな");
+        test!(15, doc, "test\n漢字ひらがな");
+    }
+
     pub struct TestWriter<W> {
         upstream: W,
     }

@@ -3,6 +3,7 @@ use std::fmt;
 use std::io;
 #[cfg(feature = "termcolor")]
 use termcolor::{ColorSpec, WriteColor};
+use unicode_width::UnicodeWidthStr;
 
 use crate::{Doc, DocPtr};
 
@@ -377,19 +378,19 @@ where
                 // fit on the current line
                 Doc::Line => return newline_fits(mode),
                 Doc::BorrowedText(ref str) => {
-                    pos += str.len();
+                    pos += UnicodeWidthStr::width(*str);
                     if pos > width {
                         return false;
                     }
                 }
                 Doc::OwnedText(ref str) => {
-                    pos += str.len();
+                    pos += UnicodeWidthStr::width(&*str.as_ref());
                     if pos > width {
                         return false;
                     }
                 }
                 Doc::SmallText(ref str) => {
-                    pos += str.len();
+                    pos += UnicodeWidthStr::width(&*str.as_ref());
                     if pos > width {
                         return false;
                     }
